@@ -62,6 +62,7 @@ export default async function ManagerPage({
   ]);
 
   const unsuccessfulSetups = allInstalls.filter((i) => !i.setupSuccessful).length;
+  const pendingPublish = allInstalls.filter((i) => i.needsPublishing && !i.publishedAt).length;
   const unresolvedTickets = allTickets.filter((t) => !t.resolvedOnSite).length;
   const doaSwaps = allTickets.filter((t) => t.category === "doa_wont_come_online").length;
   const billingAnomalies = allTickets.filter((t) => t.category === "wrong_card_used").length;
@@ -81,6 +82,9 @@ export default async function ManagerPage({
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Total installs" value={allInstalls.length} />
         <StatCard label="Unsuccessful setups" value={unsuccessfulSetups} alert />
+        <Link href="/publish" className="block transition-opacity hover:opacity-80">
+          <StatCard label="Pending publish →" value={pendingPublish} alert />
+        </Link>
         <StatCard label="Total tickets" value={allTickets.length} />
         <StatCard label="Unresolved tickets" value={unresolvedTickets} alert />
         <StatCard label="DOA swaps" value={doaSwaps} />
@@ -139,6 +143,7 @@ export default async function ManagerPage({
                 <th className="px-3 py-2">Pando account #</th>
                 <th className="px-3 py-2">Customer Luna email</th>
                 <th className="px-3 py-2">Setup successful</th>
+                <th className="px-3 py-2">Publishing</th>
                 <th className="px-3 py-2">Notes</th>
               </tr>
             </thead>
@@ -163,6 +168,15 @@ export default async function ManagerPage({
                       {i.setupSuccessful ? "Yes" : "No"}
                     </span>
                   </td>
+                  <td className="px-3 py-2">
+                    {!i.needsPublishing ? (
+                      <span className="text-zinc-500 dark:text-zinc-400">N/A</span>
+                    ) : i.publishedAt ? (
+                      <span>Published</span>
+                    ) : (
+                      <span className="font-medium text-red-600 dark:text-red-400">Pending</span>
+                    )}
+                  </td>
                   <td className="max-w-xs truncate px-3 py-2" title={i.notes ?? undefined}>
                     {i.notes || "—"}
                   </td>
@@ -170,7 +184,7 @@ export default async function ManagerPage({
               ))}
               {installs.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-3 py-6 text-center text-zinc-500 dark:text-zinc-400">
+                  <td colSpan={7} className="px-3 py-6 text-center text-zinc-500 dark:text-zinc-400">
                     No matching install records.
                   </td>
                 </tr>

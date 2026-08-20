@@ -55,6 +55,21 @@ export default async function InstallRecordsPage() {
               >
                 {install.setupSuccessful ? "Yes" : "No"}
               </dd>
+
+              {install.needsPublishing && (
+                <>
+                  <dt className="text-zinc-500 dark:text-zinc-400">Publishing</dt>
+                  <dd
+                    className={
+                      install.publishedAt
+                        ? "text-zinc-900 dark:text-zinc-100"
+                        : "font-medium text-red-600 dark:text-red-400"
+                    }
+                  >
+                    {install.publishedAt ? "Published" : "Pending"}
+                  </dd>
+                </>
+              )}
             </dl>
 
             {install.notes && (

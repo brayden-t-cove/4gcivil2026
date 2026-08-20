@@ -24,6 +24,7 @@ export async function POST(request: Request) {
       pandoAccountNumber: body.pandoAccountNumber,
       customerLunaEmail: body.customerLunaEmail,
       setupSuccessful: !!body.setupSuccessful,
+      needsPublishing: !!body.needsPublishing,
       notes: body.notes || null,
     },
   });

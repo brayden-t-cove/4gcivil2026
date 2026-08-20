@@ -20,6 +20,9 @@ model TrialInstall {
   customerLunaEmail   String // customer's account email on Luna
   setupSuccessful     Boolean @default(false)
 
+  needsPublishing Boolean   @default(false) // flagged by tech: account still needs to be published
+  publishedAt     DateTime? // set when someone works this off the publish queue
+
   notes String?
 }
 
@@ -33,8 +36,7 @@ model FailureTicket {
 
   category String
   // "doa_wont_come_online" | "coverage_failure" | "connectivity_registration"
-  // | "billing_payment_prompt" | "event_detection_failure" | "bluetooth_prompt"
-  // | "mounting_hardware" | "other"
+  // | "wrong_card_used" | "event_detection_failure" | "mounting_hardware" | "other"
 
   customerName String? // blank if this happened during site test, pre-customer
 

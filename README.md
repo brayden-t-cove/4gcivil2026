@@ -42,7 +42,8 @@ See `prisma/schema.prisma` for the full field list. Two tables:
 
 - `TrialInstall` — one row per completed customer install: tech name/employee ID,
   Pando account number, customer's Luna account email, whether setup/install was
-  successful, and free-text notes.
+  successful, whether the account needs publishing (and when it was published),
+  and free-text notes.
 - `FailureTicket` — one row per DOA/failure/troubleshooting event, including
   coverage failures found during the pre-install site test (before any customer
   install happens).
@@ -54,10 +55,18 @@ accountability — there's no login/auth in this trial version.
 
 - `/records/installs` — all trial install records, newest first.
 - `/records/tickets` — all failure/DOA tickets, newest first.
-- `/manager` — manager dashboard: summary stats (coverage failures, unresolved
-  tickets, DOA swaps, billing anomalies, sign-off completion) plus filterable
+- `/manager` — manager dashboard: summary stats (unsuccessful setups, pending
+  publish, unresolved tickets, DOA swaps, billing anomalies) plus filterable
   tables for both installs and tickets. Not linked from the tech home screen and
   has no access gate in this trial version — treat the URL as manager-only info.
+- `/publish` — publish queue: every install flagged "Account needs publishing"
+  that hasn't been marked published yet, oldest first. Whoever's doing the actual
+  Luna → Alder account transfer (Bossman) works through this list and clicks
+  "Mark published" on each one as they go, which removes it from the queue.
+  There's a manual Refresh button, and the queue re-reads from the database on
+  every page load — new "needs publishing" installs from techs in the field show
+  up automatically the next time it's opened or refreshed. Also linked from the
+  manager dashboard's "Pending publish" stat.
 
 ## Deployment notes
 

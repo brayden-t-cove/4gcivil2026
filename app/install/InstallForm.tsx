@@ -9,6 +9,7 @@ const initialState = {
   pandoAccountNumber: "",
   customerLunaEmail: "",
   setupSuccessful: true,
+  needsPublishing: false,
   notes: "",
 };
 
@@ -76,6 +77,12 @@ export default function InstallForm() {
         label="Setup and install successful"
         checked={form.setupSuccessful}
         onChange={(v) => set("setupSuccessful", v)}
+      />
+
+      <Toggle
+        label="Account needs publishing"
+        checked={form.needsPublishing}
+        onChange={(v) => set("needsPublishing", v)}
       />
 
       <Field label="Other notes worth mentioning (optional)">
