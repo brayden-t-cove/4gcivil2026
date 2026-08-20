@@ -64,7 +64,7 @@ export default async function ManagerPage({
   const unsuccessfulSetups = allInstalls.filter((i) => !i.setupSuccessful).length;
   const unresolvedTickets = allTickets.filter((t) => !t.resolvedOnSite).length;
   const doaSwaps = allTickets.filter((t) => t.category === "doa_wont_come_online").length;
-  const billingAnomalies = allTickets.filter((t) => t.category === "billing_payment_prompt").length;
+  const billingAnomalies = allTickets.filter((t) => t.category === "wrong_card_used").length;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-6">
