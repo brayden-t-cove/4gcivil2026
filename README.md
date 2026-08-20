@@ -47,9 +47,10 @@ accountability — there's no login/auth in this trial version.
 
 - `/records/installs` — all trial install records, newest first.
 - `/records/tickets` — all failure/DOA tickets, newest first.
-
-These are read-only list views for the trial; there's no manager dashboard/filtering
-yet — start there if/when this expands past the control batch.
+- `/manager` — manager dashboard: summary stats (coverage failures, unresolved
+  tickets, DOA swaps, billing anomalies, sign-off completion) plus filterable
+  tables for both installs and tickets. Not linked from the tech home screen and
+  has no access gate in this trial version — treat the URL as manager-only info.
 
 ## Deployment notes
 
