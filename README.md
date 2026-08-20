@@ -53,7 +53,10 @@ accountability — there's no login/auth in this trial version.
 
 ## Viewing submitted records
 
-- `/records/installs` — all trial install records, newest first.
+- `/records/installs` — all trial install records, newest first. Each record's
+  "needs publishing" flag is editable right here: flag it, un-flag it, or mark
+  it published, without needing to go to `/publish`. Other fields are read-only
+  on this page.
 - `/records/tickets` — all failure/DOA tickets, newest first.
 - `/manager` — manager dashboard: summary stats (unsuccessful setups, pending
   publish, unresolved tickets, DOA swaps, billing anomalies) plus filterable

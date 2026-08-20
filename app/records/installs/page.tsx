@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import PublishingControl from "@/components/PublishingControl";
 
 export const dynamic = "force-dynamic";
 
@@ -55,22 +56,16 @@ export default async function InstallRecordsPage() {
               >
                 {install.setupSuccessful ? "Yes" : "No"}
               </dd>
-
-              {install.needsPublishing && (
-                <>
-                  <dt className="text-zinc-500 dark:text-zinc-400">Publishing</dt>
-                  <dd
-                    className={
-                      install.publishedAt
-                        ? "text-zinc-900 dark:text-zinc-100"
-                        : "font-medium text-red-600 dark:text-red-400"
-                    }
-                  >
-                    {install.publishedAt ? "Published" : "Pending"}
-                  </dd>
-                </>
-              )}
             </dl>
+
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-zinc-100 pt-3 dark:border-zinc-900">
+              <span className="text-sm text-zinc-500 dark:text-zinc-400">Publishing</span>
+              <PublishingControl
+                id={install.id}
+                needsPublishing={install.needsPublishing}
+                publishedAt={install.publishedAt ? install.publishedAt.toISOString() : null}
+              />
+            </div>
 
             {install.notes && (
               <p className="mt-3 rounded-lg bg-zinc-50 p-3 text-sm text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
