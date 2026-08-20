@@ -1,13 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import {
-  BATTERY_OPTIONS,
-  FAILURE_CATEGORIES,
-  MOUNT_METHODS,
-  SITE_TEST_RESULTS,
-  SUBSCRIPTION_PLANS,
-  labelFor,
-} from "@/lib/options";
+import { FAILURE_CATEGORIES, labelFor } from "@/lib/options";
 import type { Prisma } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
@@ -56,7 +49,7 @@ export default async function ManagerPage({
 
   const installWhere: Prisma.TrialInstallWhereInput = {};
   if (installTech) installWhere.techName = { contains: installTech };
-  if (installResult) installWhere.siteTestResult = installResult;
+  if (installResult) installWhere.setupSuccessful = installResult === "yes";
 
   const ticketWhere: Prisma.FailureTicketWhereInput = {};
   if (ticketTech) ticketWhere.techName = { contains: ticketTech };
@@ -68,10 +61,7 @@ export default async function ManagerPage({
     prisma.failureTicket.findMany({ where: ticketWhere, orderBy: { createdAt: "desc" } }),
   ]);
 
-  const coverageFailures = allInstalls.filter((i) => i.siteTestResult === "fail_coverage").length;
-  const signOffComplete = allInstalls.filter(
-    (i) => i.customerUnderstandsSystem && i.billingExplainedToCustomer
-  ).length;
+  const unsuccessfulSetups = allInstalls.filter((i) => !i.setupSuccessful).length;
   const unresolvedTickets = allTickets.filter((t) => !t.resolvedOnSite).length;
   const doaSwaps = allTickets.filter((t) => t.category === "doa_wont_come_online").length;
   const billingAnomalies = allTickets.filter((t) => t.category === "billing_payment_prompt").length;
@@ -90,8 +80,7 @@ export default async function ManagerPage({
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Total installs" value={allInstalls.length} />
-        <StatCard label="Sign-off complete" value={signOffComplete} />
-        <StatCard label="Coverage failures" value={coverageFailures} alert />
+        <StatCard label="Unsuccessful setups" value={unsuccessfulSetups} alert />
         <StatCard label="Total tickets" value={allTickets.length} />
         <StatCard label="Unresolved tickets" value={unresolvedTickets} alert />
         <StatCard label="DOA swaps" value={doaSwaps} />
@@ -118,14 +107,11 @@ export default async function ManagerPage({
             />
           </label>
           <label className="flex flex-col gap-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Site test result
+            Setup successful
             <select name="installResult" defaultValue={installResult} className={selectClass}>
               <option value="">All</option>
-              {SITE_TEST_RESULTS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
             </select>
           </label>
           <button
@@ -150,13 +136,10 @@ export default async function ManagerPage({
               <tr>
                 <th className="px-3 py-2">Date</th>
                 <th className="px-3 py-2">Tech</th>
-                <th className="px-3 py-2">Customer</th>
-                <th className="px-3 py-2">Serial</th>
-                <th className="px-3 py-2">Site test</th>
-                <th className="px-3 py-2">Mount (cam / panel)</th>
-                <th className="px-3 py-2">Plan</th>
-                <th className="px-3 py-2">Battery</th>
-                <th className="px-3 py-2">Sign-off</th>
+                <th className="px-3 py-2">Pando account #</th>
+                <th className="px-3 py-2">Customer Luna email</th>
+                <th className="px-3 py-2">Setup successful</th>
+                <th className="px-3 py-2">Notes</th>
               </tr>
             </thead>
             <tbody>
@@ -169,33 +152,25 @@ export default async function ManagerPage({
                     {new Date(i.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-3 py-2">{i.techName}</td>
-                  <td className="px-3 py-2">{i.customerName}</td>
-                  <td className="px-3 py-2">{i.cameraSerial}</td>
+                  <td className="px-3 py-2">{i.pandoAccountNumber}</td>
+                  <td className="px-3 py-2">{i.customerLunaEmail}</td>
                   <td className="px-3 py-2">
                     <span
                       className={
-                        i.siteTestResult === "fail_coverage"
-                          ? "font-medium text-red-600 dark:text-red-400"
-                          : ""
+                        i.setupSuccessful ? "" : "font-medium text-red-600 dark:text-red-400"
                       }
                     >
-                      {labelFor(SITE_TEST_RESULTS, i.siteTestResult)}
+                      {i.setupSuccessful ? "Yes" : "No"}
                     </span>
                   </td>
-                  <td className="px-3 py-2">
-                    {labelFor(MOUNT_METHODS, i.cameraMountMethod)} /{" "}
-                    {labelFor(MOUNT_METHODS, i.panelMountMethod)}
-                  </td>
-                  <td className="px-3 py-2">{labelFor(SUBSCRIPTION_PLANS, i.subscriptionPlan)}</td>
-                  <td className="px-3 py-2">{labelFor(BATTERY_OPTIONS, i.batteryChargeOnArrival)}</td>
-                  <td className="px-3 py-2">
-                    {i.customerUnderstandsSystem && i.billingExplainedToCustomer ? "Yes" : "No"}
+                  <td className="max-w-xs truncate px-3 py-2" title={i.notes ?? undefined}>
+                    {i.notes || "—"}
                   </td>
                 </tr>
               ))}
               {installs.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-3 py-6 text-center text-zinc-500 dark:text-zinc-400">
+                  <td colSpan={6} className="px-3 py-6 text-center text-zinc-500 dark:text-zinc-400">
                     No matching install records.
                   </td>
                 </tr>

@@ -3,8 +3,11 @@
 A mobile-first field app for Alder techs on the Luna 4G Solar PTZ camera trial batch
 (control batch, per `Luna_4G_PTZ_Install_Guide_v2`). Techs use it to:
 
-- Log a **Trial Install Record** for each customer's 1-year trial install (pre-install
-  checklist, site test result, mounting method, pairing/subscription, final sign-off).
+- Log a **Trial Install Record** for each customer's 1-year trial install — just
+  enough (tech, Pando account #, customer's Luna email, success/fail, notes) for
+  Bossman to transfer the dealer account from the Luna database to the Alder
+  database. It's intentionally quick (under a minute); the detailed install steps
+  live on the separate install tech ticket techs already fill out.
 - Log a **Failure / DOA Ticket** for any setup issue (DOA unit, coverage failure,
   connectivity/registration issue, billing anomaly, event-detection failure, etc.) —
   matches the SOP's Section 8 troubleshooting categories.
@@ -37,12 +40,14 @@ Open http://localhost:3000. On a phone, open the URL in the browser and use
 
 See `prisma/schema.prisma` for the full field list. Two tables:
 
-- `TrialInstall` — one row per completed (or in-progress) customer install.
+- `TrialInstall` — one row per completed customer install: tech name/employee ID,
+  Pando account number, customer's Luna account email, whether setup/install was
+  successful, and free-text notes.
 - `FailureTicket` — one row per DOA/failure/troubleshooting event, including
   coverage failures found during the pre-install site test (before any customer
   install happens).
 
-Both records capture a free-text **tech name or employee badge #** field for
+Both records capture a free-text **tech name or employee ID** field for
 accountability — there's no login/auth in this trial version.
 
 ## Viewing submitted records

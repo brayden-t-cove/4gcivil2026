@@ -7,45 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// A single 1-year trial camera install, documenting the install SOP
-// (pre-install checks, site test, pairing, mounting, sign-off).
+// A record of a completed 1-year trial camera install, just enough for
+// Bossman to transfer the dealer account from the Luna database to the
+// Alder database. Detailed install/troubleshooting steps live on the
+// separate install tech ticket the tech already fills out.
 model TrialInstall {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  techName String // tech name or employee badge number
-
-  customerName    String
-  customerAddress String?
-
-  // 1. Pre-install checklist
-  lunaAccountCreated Boolean @default(false)
-  pandoAccountConfirmed Boolean @default(false)
-  batteryChargeOnArrival String // "ok" | "low_charged_before" | "low_installed_anyway"
-  batteryNotes           String?
-
-  // 2. Site test (using dedicated test camera)
-  siteTestResult      String // "pass" | "fail_coverage"
-  siteTestLocationsTried Int    @default(1)
-  liveFeedQualityNotes   String? // judgment call, no formal signal threshold
-
-  // 3/5/6. Site selection & mounting
-  cameraSerial       String
-  cameraMountMethod  String // "screws" | "zip_ties"
-  panelMountMethod   String // "screws" | "zip_ties"
-
-  // 4. App pairing
-  isFirstCameraOnAccount Boolean @default(false)
-  subscriptionPlan       String? // "single_pro" | "multi_pro" | "n_a"
-  billedOnLunaCard       Boolean @default(false)
-  walkTestEventDetectionOk Boolean @default(false)
-
-  // 7. Final verification & customer sign-off
-  postMountAngleVerified   Boolean @default(false)
-  liveViewPostMountOk      Boolean @default(false)
-  eventPlaybackPostMountOk Boolean @default(false)
-  customerUnderstandsSystem Boolean @default(false)
-  billingExplainedToCustomer Boolean @default(false)
+  techName            String // tech name or employee ID
+  pandoAccountNumber  String
+  customerLunaEmail   String // customer's account email on Luna
+  setupSuccessful     Boolean @default(false)
 
   notes String?
 }
