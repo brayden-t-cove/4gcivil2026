@@ -144,6 +144,7 @@ export default async function ManagerPage({
                 <th className="px-3 py-2">Customer Luna email</th>
                 <th className="px-3 py-2">Setup successful</th>
                 <th className="px-3 py-2">Publishing</th>
+                <th className="px-3 py-2">Migrated</th>
                 <th className="px-3 py-2">Notes</th>
               </tr>
             </thead>
@@ -177,6 +178,13 @@ export default async function ManagerPage({
                       <span className="font-medium text-red-600 dark:text-red-400">Pending</span>
                     )}
                   </td>
+                  <td className="px-3 py-2">
+                    <span
+                      className={i.migratedAt ? "" : "font-medium text-red-600 dark:text-red-400"}
+                    >
+                      {i.migratedAt ? "Yes" : "No"}
+                    </span>
+                  </td>
                   <td className="max-w-xs truncate px-3 py-2" title={i.notes ?? undefined}>
                     {i.notes || "—"}
                   </td>
@@ -184,7 +192,7 @@ export default async function ManagerPage({
               ))}
               {installs.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-3 py-6 text-center text-zinc-500 dark:text-zinc-400">
+                  <td colSpan={8} className="px-3 py-6 text-center text-zinc-500 dark:text-zinc-400">
                     No matching install records.
                   </td>
                 </tr>

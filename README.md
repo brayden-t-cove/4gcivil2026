@@ -43,7 +43,8 @@ See `prisma/schema.prisma` for the full field list. Two tables:
 - `TrialInstall` — one row per completed customer install: tech name/employee ID,
   Pando account number, customer's Luna account email, whether setup/install was
   successful, whether the account needs publishing (and when it was published),
-  and free-text notes.
+  whether it's been migrated from Luna to Alder (back-office only, not set by the
+  tech), and free-text notes.
 - `FailureTicket` — one row per DOA/failure/troubleshooting event, including
   coverage failures found during the pre-install site test (before any customer
   install happens).
@@ -55,13 +56,16 @@ accountability — there's no login/auth in this trial version.
 
 - `/records/installs` — all trial install records, newest first. Each record's
   "needs publishing" flag is editable right here: flag it, un-flag it, or mark
-  it published, without needing to go to `/publish`. Other fields are read-only
-  on this page.
+  it published, without needing to go to `/publish`. There's also a "Migrated to
+  Alder" control (mark migrated / un-migrate) — this is a back-office-only field
+  the tech never sees or sets on the install form itself. Other fields are
+  read-only on this page.
 - `/records/tickets` — all failure/DOA tickets, newest first.
 - `/manager` — manager dashboard: summary stats (unsuccessful setups, pending
   publish, unresolved tickets, DOA swaps, billing anomalies) plus filterable
-  tables for both installs and tickets. Not linked from the tech home screen and
-  has no access gate in this trial version — treat the URL as manager-only info.
+  tables for both installs and tickets, including read-only Publishing and
+  Migrated columns. Not linked from the tech home screen and has no access gate
+  in this trial version — treat the URL as manager-only info.
 - `/publish` — publish queue: every install flagged "Account needs publishing"
   that hasn't been marked published yet, oldest first. Whoever's doing the actual
   Luna → Alder account transfer (Bossman) works through this list and clicks

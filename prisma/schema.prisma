@@ -23,6 +23,8 @@ model TrialInstall {
   needsPublishing Boolean   @default(false) // flagged by tech: account still needs to be published
   publishedAt     DateTime? // set when someone works this off the publish queue
 
+  migratedAt DateTime? // set from the back office once the account is moved from Luna to Alder; tech never sets this
+
   notes String?
 }
 

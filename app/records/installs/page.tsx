@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import PublishingControl from "@/components/PublishingControl";
+import MigrationControl from "@/components/MigrationControl";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ export default async function InstallRecordsPage() {
           >
             <div className="flex items-baseline justify-between gap-2">
               <h2 className="font-semibold text-zinc-900 dark:text-zinc-50">
-                {install.customerLunaEmail}
+                Pando #{install.pandoAccountNumber}
               </h2>
               <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">
                 {new Date(install.createdAt).toLocaleString()}
@@ -45,6 +46,9 @@ export default async function InstallRecordsPage() {
 
               <dt className="text-zinc-500 dark:text-zinc-400">Pando account #</dt>
               <dd className="text-zinc-900 dark:text-zinc-100">{install.pandoAccountNumber}</dd>
+
+              <dt className="text-zinc-500 dark:text-zinc-400">Customer&apos;s email on Luna</dt>
+              <dd className="text-zinc-900 dark:text-zinc-100">{install.customerLunaEmail}</dd>
 
               <dt className="text-zinc-500 dark:text-zinc-400">Setup successful</dt>
               <dd
@@ -64,6 +68,14 @@ export default async function InstallRecordsPage() {
                 id={install.id}
                 needsPublishing={install.needsPublishing}
                 publishedAt={install.publishedAt ? install.publishedAt.toISOString() : null}
+              />
+            </div>
+
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-zinc-100 pt-3 dark:border-zinc-900">
+              <span className="text-sm text-zinc-500 dark:text-zinc-400">Migrated to Alder</span>
+              <MigrationControl
+                id={install.id}
+                migratedAt={install.migratedAt ? install.migratedAt.toISOString() : null}
               />
             </div>
 
