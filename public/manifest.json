@@ -1,0 +1,17 @@
+{
+  "name": "Luna 4G Trial Tracker",
+  "short_name": "Luna Trial",
+  "description": "Field app for logging Luna 4G PTZ trial installs and failure/DOA tickets",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#18181b",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
