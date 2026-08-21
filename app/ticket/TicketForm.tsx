@@ -15,6 +15,7 @@ import { FAILURE_CATEGORIES } from "@/lib/options";
 
 const initialState = {
   techName: "",
+  pandoIdOrPoNumber: "",
   category: "",
   customerName: "",
   originalCameraSerial: "",
@@ -69,6 +70,13 @@ export default function TicketForm() {
           required
           value={form.techName}
           onChange={(e) => set("techName", e.target.value)}
+        />
+      </Field>
+      <Field label="Pando ID or purchase order number" required>
+        <TextInput
+          required
+          value={form.pandoIdOrPoNumber}
+          onChange={(e) => set("pandoIdOrPoNumber", e.target.value)}
         />
       </Field>
 

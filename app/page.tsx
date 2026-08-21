@@ -1,6 +1,13 @@
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = await searchParams;
+  const saved = sp.saved === "1";
+
   return (
     <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-4 py-10">
       <div className="mb-8 text-center">
@@ -11,6 +18,12 @@ export default function Home() {
           Control batch — Alder Techs
         </p>
       </div>
+
+      {saved && (
+        <p className="mb-6 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-center text-sm text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-300">
+          Install record saved.
+        </p>
+      )}
 
       <div className="flex flex-col gap-4">
         <Link

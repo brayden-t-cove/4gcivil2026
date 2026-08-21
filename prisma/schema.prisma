@@ -36,6 +36,8 @@ model FailureTicket {
 
   techName String
 
+  pandoIdOrPoNumber String @default("") // Pando ID or purchase order number, mandatory on new tickets (enforced in the API/form, not the DB)
+
   category String
   // "doa_wont_come_online" | "coverage_failure" | "connectivity_registration"
   // | "wrong_card_used" | "event_detection_failure" | "mounting_hardware" | "other"

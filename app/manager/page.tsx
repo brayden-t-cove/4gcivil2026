@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { FAILURE_CATEGORIES, labelFor } from "@/lib/options";
+import RefreshButton from "@/components/RefreshButton";
 import type { Prisma } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
@@ -72,12 +73,25 @@ export default async function ManagerPage({
       <Link href="/" className="text-sm text-zinc-500 hover:underline">
         ← Home
       </Link>
-      <h1 className="mt-2 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        Manager Dashboard
-      </h1>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-        Trial batch overview — all install records and failure/DOA tickets logged by techs.
-      </p>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+            Manager Dashboard
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            Trial batch overview — all install records and failure/DOA tickets logged by techs.
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <a
+            href="/api/export"
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
+          >
+            Export to Excel
+          </a>
+          <RefreshButton />
+        </div>
+      </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Total installs" value={allInstalls.length} />
@@ -261,6 +275,7 @@ export default async function ManagerPage({
               <tr>
                 <th className="px-3 py-2">Date</th>
                 <th className="px-3 py-2">Tech</th>
+                <th className="px-3 py-2">Pando ID / PO #</th>
                 <th className="px-3 py-2">Category</th>
                 <th className="px-3 py-2">Customer</th>
                 <th className="px-3 py-2">Original / Replacement</th>
@@ -278,6 +293,7 @@ export default async function ManagerPage({
                     {new Date(t.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-3 py-2">{t.techName}</td>
+                  <td className="px-3 py-2">{t.pandoIdOrPoNumber || "—"}</td>
                   <td className="px-3 py-2">{labelFor(FAILURE_CATEGORIES, t.category)}</td>
                   <td className="px-3 py-2">{t.customerName || "—"}</td>
                   <td className="px-3 py-2">
@@ -301,7 +317,7 @@ export default async function ManagerPage({
               ))}
               {tickets.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-3 py-6 text-center text-zinc-500 dark:text-zinc-400">
+                  <td colSpan={8} className="px-3 py-6 text-center text-zinc-500 dark:text-zinc-400">
                     No matching tickets.
                   </td>
                 </tr>

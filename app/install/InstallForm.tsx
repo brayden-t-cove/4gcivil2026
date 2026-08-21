@@ -37,7 +37,7 @@ export default function InstallForm() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || "Failed to save install record");
       }
-      router.push("/records/installs?created=1");
+      router.push("/?saved=1");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {

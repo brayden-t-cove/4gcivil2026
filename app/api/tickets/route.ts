@@ -11,7 +11,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const body = await request.json();
 
-  const required = ["techName", "category", "symptoms"];
+  const required = ["techName", "pandoIdOrPoNumber", "category", "symptoms"];
   for (const field of required) {
     if (!body[field] || typeof body[field] !== "string" || !body[field].trim()) {
       return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 });
@@ -21,6 +21,7 @@ export async function POST(request: Request) {
   const ticket = await prisma.failureTicket.create({
     data: {
       techName: body.techName,
+      pandoIdOrPoNumber: body.pandoIdOrPoNumber,
       category: body.category,
       customerName: body.customerName || null,
       originalCameraSerial: body.originalCameraSerial || null,

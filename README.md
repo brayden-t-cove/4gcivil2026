@@ -10,7 +10,8 @@ A mobile-first field app for Alder techs on the Luna 4G Solar PTZ camera trial b
   live on the separate install tech ticket techs already fill out.
 - Log a **Failure / DOA Ticket** for any setup issue (DOA unit, coverage failure,
   connectivity/registration issue, billing anomaly, event-detection failure, etc.) —
-  matches the SOP's Section 8 troubleshooting categories.
+  matches the SOP's Section 8 troubleshooting categories. Requires a Pando ID or
+  purchase order number, same as the install record.
 
 This is intentionally lightweight, matching the SOP's framing that this is a trial
 batch and not yet full production infrastructure.
@@ -47,7 +48,7 @@ See `prisma/schema.prisma` for the full field list. Two tables:
   tech), and free-text notes.
 - `FailureTicket` — one row per DOA/failure/troubleshooting event, including
   coverage failures found during the pre-install site test (before any customer
-  install happens).
+  install happens). Includes a required Pando ID / purchase order number field.
 
 Both records capture a free-text **tech name or employee ID** field for
 accountability — there's no login/auth in this trial version.
@@ -65,7 +66,13 @@ accountability — there's no login/auth in this trial version.
   publish, unresolved tickets, DOA swaps, billing anomalies) plus filterable
   tables for both installs and tickets, including read-only Publishing and
   Migrated columns. Not linked from the tech home screen and has no access gate
-  in this trial version — treat the URL as manager-only info.
+  in this trial version — treat the URL as manager-only info. Has an
+  **Export to Excel** button (see below) and a manual Refresh button.
+
+All three record-viewing pages (`/records/installs`, `/records/tickets`,
+`/manager`) have a manual **Refresh** button that re-pulls current data without
+a full page reload — useful since these pages are shared across techs/managers
+and don't auto-update on their own.
 - `/publish` — publish queue: every install flagged "Account needs publishing"
   that hasn't been marked published yet, oldest first. Whoever's doing the actual
   Luna → Alder account transfer (Bossman) works through this list and clicks
@@ -74,6 +81,35 @@ accountability — there's no login/auth in this trial version.
   every page load — new "needs publishing" installs from techs in the field show
   up automatically the next time it's opened or refreshed. Also linked from the
   manager dashboard's "Pending publish" stat.
+
+## Exporting to Excel
+
+`GET /api/export` (linked from `/manager` as "Export to Excel") streams back an
+`.xlsx` workbook with two sheets — "Trial Installs" and "Failure Tickets" — covering
+every record in the database, generated on demand via the `xlsx` (SheetJS) package.
+
+Note: `npm audit` flags `xlsx` for two known CVEs (prototype pollution, ReDoS) —
+both are in its *parsing* path (reading untrusted spreadsheet files). This app only
+ever calls `XLSX.write` on data we already trust from our own database, never
+`XLSX.read`/`XLSX.parse` on anything uploaded or external, so those CVEs don't apply
+to how it's used here. No patched version exists upstream as of this writing.
+
+## Clearing test data
+
+Before real trial installs start, clear out whatever test records accumulated
+during setup/testing. There's no in-app "delete all" button (deleting records
+isn't part of the app to avoid an easy way to lose real trial data by accident) —
+run this directly against the database via Railway's **Postgres service → Data**
+tab (or `psql`/any Postgres client pointed at the same `DATABASE_URL`):
+
+```sql
+TRUNCATE TABLE "TrialInstall" RESTART IDENTITY;
+TRUNCATE TABLE "FailureTicket" RESTART IDENTITY;
+```
+
+Run both, or just `TrialInstall`, depending on whether the test failure/DOA
+tickets should go too. This is irreversible — there's no backup step built into
+the app, so double-check you're pointed at the right database before running it.
 
 ## Deployment notes
 

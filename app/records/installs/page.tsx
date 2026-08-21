@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import PublishingControl from "@/components/PublishingControl";
 import MigrationControl from "@/components/MigrationControl";
+import RefreshButton from "@/components/RefreshButton";
 
 export const dynamic = "force-dynamic";
 
@@ -15,12 +16,17 @@ export default async function InstallRecordsPage() {
       <Link href="/" className="text-sm text-zinc-500 hover:underline">
         ← Home
       </Link>
-      <h1 className="mt-2 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        Trial Install Records
-      </h1>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-        {installs.length} record{installs.length === 1 ? "" : "s"}
-      </p>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+            Trial Install Records
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            {installs.length} record{installs.length === 1 ? "" : "s"}
+          </p>
+        </div>
+        <RefreshButton />
+      </div>
 
       <div className="mt-6 flex flex-col gap-4">
         {installs.length === 0 && (

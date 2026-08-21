@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { FAILURE_CATEGORIES, labelFor } from "@/lib/options";
+import RefreshButton from "@/components/RefreshButton";
 
 export const dynamic = "force-dynamic";
 
@@ -14,12 +15,17 @@ export default async function TicketRecordsPage() {
       <Link href="/" className="text-sm text-zinc-500 hover:underline">
         ← Home
       </Link>
-      <h1 className="mt-2 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        Failure / DOA Tickets
-      </h1>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-        {tickets.length} ticket{tickets.length === 1 ? "" : "s"}
-      </p>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+            Failure / DOA Tickets
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            {tickets.length} ticket{tickets.length === 1 ? "" : "s"}
+          </p>
+        </div>
+        <RefreshButton />
+      </div>
 
       <div className="mt-6 flex flex-col gap-4">
         {tickets.length === 0 && (
@@ -45,6 +51,11 @@ export default async function TicketRecordsPage() {
             <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
               <dt className="text-zinc-500 dark:text-zinc-400">Tech</dt>
               <dd className="text-zinc-900 dark:text-zinc-100">{ticket.techName}</dd>
+
+              <dt className="text-zinc-500 dark:text-zinc-400">Pando ID / PO #</dt>
+              <dd className="text-zinc-900 dark:text-zinc-100">
+                {ticket.pandoIdOrPoNumber || "—"}
+              </dd>
 
               {ticket.originalCameraSerial && (
                 <>
